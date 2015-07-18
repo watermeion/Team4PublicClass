@@ -85,7 +85,31 @@ static NSMutableDictionary * T4_SuperClass_Singleton_Dic;
     return dict;
 }
 
+
++ (T4_Object *)loadUserDefault{
+    NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey: NSStringFromClass([self class])];
+    if(data == nil || [data length] == 0)
+        return nil;
+    NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc]initForReadingWithData:data];
+    NSDictionary *dic             = [unarchiver decodeObjectForKey:NSStringFromClass([self class])];
+    return [[self class]instanceFromDic:dic];
+}
+
+
++ (void)saveUserDefault:(T4_Object *)myObject{
+    // FIXME: NSNull null 不符合NSCoding协议，不能直接写入
+    NSDictionary *dic         = [myObject dictionary];
+    NSMutableData *data       = [NSMutableData dataWithCapacity:0];
+    NSKeyedArchiver *archiver = [[NSKeyedArchiver alloc]initForWritingWithMutableData:data];
+    [archiver encodeObject:dic forKey:NSStringFromClass([self class])];
+    [archiver finishEncoding];
+    [[NSUserDefaults standardUserDefaults] setObject:data forKey:NSStringFromClass([self class])];
+    [[NSUserDefaults standardUserDefaults]synchronize];
+}
+
+
 - (T4_Object *)clear{
+    // TODO: 深入测试该方法
     @try {
         NSArray *arr = [self p_getPropertyList];
         for (NSString *value in arr) {

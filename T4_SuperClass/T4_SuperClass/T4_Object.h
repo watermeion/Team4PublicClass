@@ -36,6 +36,22 @@
 - (NSDictionary *)dictionary;
 
 /**
+ *  simple Persistence solution Getter (one record per class)
+ *
+ *  @return local stored instance
+ */
++ (T4_Object *)loadUserDefault;
+
+/**
+ *  simple Persistence solution Setter (one record per class)
+ *
+ *  @param myObject  to be stored
+ *
+ *
+ */
++ (void)saveUserDefault:(T4_Object *)myObject;
+
+/**
  *  clear all values
  *
  *  @return clear object with values of 0 or nil
