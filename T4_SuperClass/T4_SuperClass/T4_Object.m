@@ -71,13 +71,17 @@ static NSMutableDictionary * T4_SuperClass_Singleton_Dic;
     NSArray *propertyList     = [self p_getPropertyList];
     
     for (NSString *key in propertyList) {
-        id value = [self valueForKey:key];
+        
+        id value = [self valueForKey:key];  //获取对应属性名：key 的值 value
+        
+        //判断value  是不是一种集合属性的值，如果是 将其dictionary形式的值 保存下来
         if ([value isKindOfClass:[T4_Object class]] && [[value p_getPropertyList] count] > 0){
             [dict setObject:[value dictionary] forKey:key];
-        } else{
+        } else{//如果不是集合类型，则直接保存成k-v字典
             if(value != nil){
                 [dict setObject:value forKey:key];
             } else{
+            //当值为空时，存储[NSNUll null]
                 [dict setObject:[NSNull null] forKey:key];
             }
         }
